@@ -1,0 +1,36 @@
+# Python environments, bytecode, and test output
+.venv/
+**/.venv/
+__pycache__/
+**/__pycache__/
+*.py[cod]
+.pytest_cache/
+coverage.xml
+htmlcov/
+
+# Local environment files; keep the non-secret example files
+.env
+**/.env
+.env.*
+**/.env.*
+!.env.example
+!**/.env.example
+
+# Local databases and SQLite sidecar files
+*.db
+*.db-*
+
+# Frontend dependencies, build output, and local platform metadata
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+.vercel/
+playwright-report/
+test-results/
+
+# Editor and operating-system files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
