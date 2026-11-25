@@ -80,37 +80,53 @@ Vite prints the local frontend URL, normally `http://localhost:5173`. The fronte
 
 For example: `/api/patients?search=alex&ward=ICU&department=Cardiology`.
 
+While the backend is running locally, interactive Swagger UI is available at `http://127.0.0.1:8000/docs`, and the OpenAPI schema is available at `http://127.0.0.1:8000/openapi.json`.
+
 ## Validation
 
 The frontend requires all patient fields, accepts names containing letters and spaces, restricts age to an integer from 0 through 120, and prevents future admission dates. The API independently validates the same fields and allowed select values; invalid requests return HTTP 422 with a validation detail.
 
-## Deployment
+## Testing and Verification
 
-Deployment is not configured yet. The following is a deployment plan, not a live service. It keeps the API and frontend as separate services and retains SQLite.
+The results below are from the previously completed local integration audit. They are recorded here for reference and were not rerun during this documentation and screenshot update.
 
-### Backend: Render Web Service
-
-Create a Python web service with the repository root directory set to `backend`:
-
-- Build command: `pip install -r requirements.txt`
-- Start command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-- Health check path: `/api/health`
-- Set `FRONTEND_URL` to the exact deployed frontend origin, such as `https://your-site.example` (no path). Multiple comma-separated origins are supported.
-- Attach a persistent disk mounted at `/var/data` and set `DATABASE_PATH=/var/data/database.db`.
-
-Render's default service filesystem is ephemeral. Without an attached persistent disk, SQLite changes can be lost on restart or redeploy. Render documents disks for paid web services; disk-backed services preserve files under their mount path across restarts and redeploys, but are limited to one service instance and redeploys have downtime. Confirm current plan and disk availability in Render before choosing this setup. The API uses the configured `DATABASE_PATH`; its local default remains `backend/app/database.db`.
-
-### Frontend: Vercel
-
-Create a project from the same repository with the root directory set to `frontend`. Use the Vite framework preset, build command `npm run build`, and output directory `dist` (Vercel can detect these Vite defaults). Set the build environment variable `VITE_API_BASE_URL` to the deployed backend base URL, for example `https://your-api.example` without `/api`. Vite embeds this value into the frontend build, so rebuild after changing it.
-
-After the frontend receives its final URL, set that exact origin in the backend's `FRONTEND_URL` environment variable and redeploy the API.
-
-### Deployment URLs
-
-- Frontend: **[TO BE FILLED AFTER DEPLOYMENT]**
-- Backend: **[TO BE FILLED AFTER DEPLOYMENT]**
+| Area | Previously completed result |
+| --- | --- |
+| Patient CRUD | Passed: create, list, retrieve, update, delete, and discharge flows were verified locally. |
+| Search and filters | Passed: name search and ward, department, and doctor filters were verified, including combined filters. |
+| Frontend validation | Passed: required fields, name format, age range, and admission-date rules were checked in the form. |
+| Backend validation | Passed: invalid API input was independently rejected with validation errors. |
+| SQLite persistence | Passed: patient data remained available after a local backend restart. |
+| Error handling | Passed: API and connection errors were surfaced to the user through the application UI. |
+| CORS | Passed: local frontend/API cross-origin behavior was checked. |
+| Swagger/OpenAPI | Passed: the local API documentation and OpenAPI schema were checked. |
+| Responsive layouts | Passed: desktop, tablet, and mobile layouts were checked. |
+| Production build | Passed: the frontend production build completed successfully. |
 
 ## Screenshots
 
-Screenshots will be added after the final deployed UI is available. No screenshots are included yet.
+These screenshots were captured from the local application using fictional demonstration records. The OpenAPI image shows the schema returned by FastAPI at `/openapi.json`.
+
+### Patient list
+
+![Patient list with fictional demonstration records](docs/screenshots/patient-list.png)
+
+### Add patient form
+
+![Add patient form](docs/screenshots/patient-form.png)
+
+### Search and filters
+
+![Patient name search and ward filter](docs/screenshots/search-and-filters.png)
+
+### Mobile layout
+
+![Responsive patient list on a mobile viewport](docs/screenshots/mobile-layout.png)
+
+### OpenAPI schema
+
+![Pretty-printed FastAPI OpenAPI schema](docs/screenshots/openapi-schema.png)
+
+## Deployment Status
+
+The application is not deployed. There are currently no live frontend or backend URLs. The local URLs in the setup and API sections are for local development only.
